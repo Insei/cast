@@ -277,10 +277,22 @@ func GenericTo[T supported](s string) (T, error) {
 }
 
 func ReflectTo(s string, toType reflect.Type) (any, error) {
+	pointerWrap := 0
+	for toType.Kind() == reflect.Ptr {
+		pointerWrap++
+		toType = toType.Elem()
+	}
 	if f, ok := mapFunc[reflect.PointerTo(toType)]; ok {
 		to := reflect.New(toType).Interface()
 		err := f(s, to)
-		return reflect.ValueOf(to).Elem().Interface(), err
+		if err != nil {
+			return nil, err
+		}
+		val := reflect.ValueOf(to).Elem()
+		for i := 0; i < pointerWrap; i++ {
+			val = val.Addr()
+		}
+		return val.Interface(), err
 	}
 	return nil, fmt.Errorf("failed to convert %s to %s", s, toType.String())
 }
