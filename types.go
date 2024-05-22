@@ -1,5 +1,11 @@
 package cast
 
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
+
 type numberType uint
 
 const (
@@ -22,5 +28,7 @@ type ptrNumbers interface {
 type supported interface {
 	numbers | ptrNumbers |
 		bool | string |
-		*bool | *string
+		*bool | *string |
+		time.Time | *time.Time |
+		uuid.UUID | *uuid.UUID
 }

@@ -3,7 +3,9 @@ package cast
 import (
 	"reflect"
 	"testing"
+	"time"
 
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -125,6 +127,24 @@ func TestTo(t *testing.T) {
 	valFloatPtr64, err := To[*float64]("123.456789")
 	assert.NoError(err)
 	assert.Equal(float64(123.456789), *valFloatPtr64)
+
+	date := time.Date(2024, time.May, 22, 11, 36, 57, 0, time.Local)
+	valTime, err := To[time.Time](date.Format(time.RFC3339))
+	assert.NoError(err)
+	assert.Equal(date, valTime)
+
+	valPtrTime, err := To[*time.Time](date.Format(time.RFC3339))
+	assert.NoError(err)
+	assert.Equal(date, *valPtrTime)
+
+	id := uuid.New()
+	valId, err := To[uuid.UUID](id.String())
+	assert.NoError(err)
+	assert.Equal(id, valId)
+
+	valPtrId, err := To[*uuid.UUID](id.String())
+	assert.NoError(err)
+	assert.Equal(id, *valPtrId)
 }
 
 func TestFromTo(t *testing.T) {
@@ -145,6 +165,8 @@ func TestFromTo(t *testing.T) {
 		valUint64  uint64
 		valFloat32 float32
 		valFloat64 float64
+		valTime    time.Time
+		valUUID    uuid.UUID
 	)
 
 	// Assume that ToFrom method accepts two arguments: a string and a pointer to set the converted value.
@@ -192,6 +214,14 @@ func TestFromTo(t *testing.T) {
 
 	assert.NoError(ToFrom("123.456789", &valFloat64))
 	assert.Equal(float64(123.456789), valFloat64)
+
+	date := time.Date(2024, time.May, 22, 11, 36, 57, 0, time.Local)
+	assert.NoError(ToFrom(date.Format(time.RFC3339), &valTime))
+	assert.Equal(date, valTime)
+
+	id := uuid.New()
+	assert.NoError(ToFrom(id.String(), &valUUID))
+	assert.Equal(id, valUUID)
 }
 
 func TestReflectTo(t *testing.T) {
@@ -225,6 +255,10 @@ func TestReflectTo(t *testing.T) {
 		valFloat64    float64
 		valFloatPtr32 *float32
 		valFloatPtr64 *float64
+		valTime       time.Time
+		valUUID       uuid.UUID
+		valTimePtr    *time.Time
+		valUUIDPtr    *uuid.UUID
 	)
 
 	// Testing integers
@@ -333,4 +367,22 @@ func TestReflectTo(t *testing.T) {
 	res, err = ToReflect("1.0", reflect.TypeOf(valFloatPtr64))
 	assert.NoError(err)
 	assert.Equal(float64(1.0), *res.(*float64))
+
+	date := time.Date(2024, time.May, 22, 11, 36, 57, 0, time.Local)
+	res, err = ToReflect(date.Format(time.RFC3339), reflect.TypeOf(valTime))
+	assert.NoError(err)
+	assert.Equal(date, res.(time.Time))
+
+	res, err = ToReflect(date.Format(time.RFC3339), reflect.TypeOf(valTimePtr))
+	assert.NoError(err)
+	assert.Equal(date, *res.(*time.Time))
+
+	id := uuid.New()
+	res, err = ToReflect(id.String(), reflect.TypeOf(valUUID))
+	assert.NoError(err)
+	assert.Equal(id, res.(uuid.UUID))
+
+	res, err = ToReflect(id.String(), reflect.TypeOf(valUUIDPtr))
+	assert.NoError(err)
+	assert.Equal(id, *res.(*uuid.UUID))
 }
