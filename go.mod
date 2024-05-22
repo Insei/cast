@@ -1,6 +1,6 @@
 module github.com/insei/cast
 
-go 1.22
+go 1.18
 
 require (
 	github.com/google/uuid v1.6.0
