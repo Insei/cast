@@ -1,3 +1,7 @@
+[![codecov](https://codecov.io/github/Insei/cast/graph/badge.svg?token=KPPYANT85P)](https://codecov.io/github/Insei/cast)
+[![build](https://github.com/insei/cast/actions/workflows/go.yml/badge.svg)](https://github.com/Insei/cast/actions/workflows/go.yml)
+[![Goreport](https://goreportcard.com/badge/github.com/insei/cast)](https://goreportcard.com/report/github.com/insei/cast)
+[![GoDoc](https://godoc.org/github.com/insei/cast?status.svg)](https://godoc.org/github.com/insei/cast)
 # Cast
 Cast is string casting library, support cast string to generic type, reflect type and value type.
 
