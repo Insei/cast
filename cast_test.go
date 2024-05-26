@@ -128,7 +128,7 @@ func TestTo(t *testing.T) {
 	assert.NoError(err)
 	assert.Equal(float64(123.456789), *valFloatPtr64)
 
-	date := time.Date(2024, time.May, 22, 11, 36, 57, 0, time.Local)
+	date := time.Date(2024, time.May, 22, 11, 36, 57, 0, time.UTC)
 	valTime, err := To[time.Time](date.Format(time.RFC3339))
 	assert.NoError(err)
 	assert.Equal(date, valTime)
@@ -215,7 +215,7 @@ func TestFromTo(t *testing.T) {
 	assert.NoError(ToFrom("123.456789", &valFloat64))
 	assert.Equal(float64(123.456789), valFloat64)
 
-	date := time.Date(2024, time.May, 22, 11, 36, 57, 0, time.Local)
+	date := time.Date(2024, time.May, 22, 11, 36, 57, 0, time.UTC)
 	assert.NoError(ToFrom(date.Format(time.RFC3339), &valTime))
 	assert.Equal(date, valTime)
 
@@ -368,7 +368,7 @@ func TestReflectTo(t *testing.T) {
 	assert.NoError(err)
 	assert.Equal(float64(1.0), *res.(*float64))
 
-	date := time.Date(2024, time.May, 22, 11, 36, 57, 0, time.Local)
+	date := time.Date(2024, time.May, 22, 11, 36, 57, 0, time.UTC)
 	res, err = ToReflect(date.Format(time.RFC3339), reflect.TypeOf(valTime))
 	assert.NoError(err)
 	assert.Equal(date, res.(time.Time))
