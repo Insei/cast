@@ -12,6 +12,9 @@ import (
 func TestTo(t *testing.T) {
 	assert := assert.New(t)
 
+	_, err := To[int]("a")
+	assert.Error(err)
+
 	// Testing integers
 	valInt, err := To[int]("56")
 	assert.NoError(err)
@@ -60,6 +63,9 @@ func TestTo(t *testing.T) {
 	assert.Equal(int64(123456789), valInt64)
 
 	// Testing pointers to integers of different bits
+	_, err = To[uint]("a")
+	assert.Error(err)
+
 	valIntPtr8, err := To[*int8]("42")
 	assert.NoError(err)
 	assert.Equal(int8(42), *valIntPtr8)
@@ -77,6 +83,10 @@ func TestTo(t *testing.T) {
 	assert.Equal(int64(123456789), *valIntPtr64)
 
 	// Testing unsigned integers of different bits
+	valUint, err := To[uint]("14")
+	assert.NoError(err)
+	assert.Equal(uint(14), valUint)
+
 	valUint8, err := To[uint8]("12")
 	assert.NoError(err)
 	assert.Equal(uint8(12), valUint8)
@@ -94,6 +104,10 @@ func TestTo(t *testing.T) {
 	assert.Equal(uint64(123456789), valUint64)
 
 	// Testing pointers to unsigned integers of different bits
+	valUintPtr, err := To[*uint]("14")
+	assert.NoError(err)
+	assert.Equal(uint(14), *valUintPtr)
+
 	valUintPtr8, err := To[*uint8]("42")
 	assert.NoError(err)
 	assert.Equal(uint8(42), *valUintPtr8)
@@ -111,6 +125,9 @@ func TestTo(t *testing.T) {
 	assert.Equal(uint64(123456789), *valUintPtr64)
 
 	// Testing floats of different bits
+	_, err = To[float32]("a")
+	assert.Error(err)
+
 	valFloat32, err := To[float32]("123.45")
 	assert.NoError(err)
 	assert.Equal(float32(123.45), valFloat32)
@@ -128,6 +145,10 @@ func TestTo(t *testing.T) {
 	assert.NoError(err)
 	assert.Equal(float64(123.456789), *valFloatPtr64)
 
+	// time.Time tests
+	_, err = To[time.Time]("a")
+	assert.Error(err)
+
 	date := time.Date(2024, time.May, 22, 11, 36, 57, 0, time.UTC)
 	valTime, err := To[time.Time](date.Format(time.RFC3339))
 	assert.NoError(err)
@@ -136,6 +157,10 @@ func TestTo(t *testing.T) {
 	valPtrTime, err := To[*time.Time](date.Format(time.RFC3339))
 	assert.NoError(err)
 	assert.Equal(date, *valPtrTime)
+
+	// uuid.UUID tests
+	_, err = To[uuid.UUID]("a")
+	assert.Error(err)
 
 	id := uuid.New()
 	valId, err := To[uuid.UUID](id.String())
@@ -222,6 +247,12 @@ func TestFromTo(t *testing.T) {
 	id := uuid.New()
 	assert.NoError(ToFrom(id.String(), &valUUID))
 	assert.Equal(id, valUUID)
+
+	// unsupported type test
+	type UnsupportedType struct {
+	}
+	err := ToFrom("a", &UnsupportedType{})
+	assert.Error(err)
 }
 
 func TestReflectTo(t *testing.T) {
@@ -385,4 +416,10 @@ func TestReflectTo(t *testing.T) {
 	res, err = ToReflect(id.String(), reflect.TypeOf(valUUIDPtr))
 	assert.NoError(err)
 	assert.Equal(id, *res.(*uuid.UUID))
+
+	// unsupported type test
+	type UnsupportedType struct {
+	}
+	_, err = ToReflect("a", reflect.TypeOf(&UnsupportedType{}))
+	assert.Error(err)
 }
