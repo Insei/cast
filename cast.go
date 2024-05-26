@@ -176,5 +176,5 @@ func ToReflect(s string, toType reflect.Type) (any, error) {
 		}
 		return val.Interface(), err
 	}
-	return nil, fmt.Errorf("failed to convert %s to %s", s, toType.String())
+	return nil, fmt.Errorf("failed to convert %s to %s, unsupported type", s, toType.String())
 }
