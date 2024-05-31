@@ -5,6 +5,13 @@
 # Cast
 Cast is string casting library, support cast string to generic type, reflect type and value type.
 
+## Installation
+Install via `go get`. Note that Go 1.18 or newer is required.
+```bash
+go get github.com/Insei/cast@latest
+```
+## Contribution
+Feel free to contribute
 ## Supported types
 ```
 (*)int
