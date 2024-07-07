@@ -48,54 +48,90 @@ var mapFunc = map[reflect.Type]func(string, any) error{
 }
 
 func fromToInt(s string, to any) error {
-	val, err := strconv.ParseInt(s, 10, 64)
-	if err != nil {
-		return err
-	}
 	switch ptr := to.(type) {
 	case *int:
+		val, err := strconv.ParseInt(s, 10, 0)
+		if err != nil {
+			return err
+		}
 		*ptr = int(val)
 	case *int8:
+		val, err := strconv.ParseInt(s, 10, 8)
+		if err != nil {
+			return err
+		}
 		*ptr = int8(val)
 	case *int16:
+		val, err := strconv.ParseInt(s, 10, 16)
+		if err != nil {
+			return err
+		}
 		*ptr = int16(val)
 	case *int32:
+		val, err := strconv.ParseInt(s, 10, 32)
+		if err != nil {
+			return err
+		}
 		*ptr = int32(val)
 	case *int64:
+		val, err := strconv.ParseInt(s, 10, 64)
+		if err != nil {
+			return err
+		}
 		*ptr = val
 	}
 	return nil
 }
 
 func fromToUint(s string, to any) error {
-	val, err := strconv.ParseUint(s, 10, 64)
-	if err != nil {
-		return err
-	}
 	switch ptr := to.(type) {
 	case *uint:
+		val, err := strconv.ParseUint(s, 10, 0)
+		if err != nil {
+			return err
+		}
 		*ptr = uint(val)
 	case *uint8:
+		val, err := strconv.ParseUint(s, 10, 8)
+		if err != nil {
+			return err
+		}
 		*ptr = uint8(val)
 	case *uint16:
+		val, err := strconv.ParseUint(s, 10, 16)
+		if err != nil {
+			return err
+		}
 		*ptr = uint16(val)
 	case *uint32:
+		val, err := strconv.ParseUint(s, 10, 32)
+		if err != nil {
+			return err
+		}
 		*ptr = uint32(val)
 	case *uint64:
+		val, err := strconv.ParseUint(s, 10, 64)
+		if err != nil {
+			return err
+		}
 		*ptr = val
 	}
 	return nil
 }
 
 func fromToFloat(s string, to any) error {
-	val, err := strconv.ParseFloat(s, 64)
-	if err != nil {
-		return err
-	}
 	switch ptr := to.(type) {
 	case *float32:
+		val, err := strconv.ParseFloat(s, 32)
+		if err != nil {
+			return err
+		}
 		*ptr = float32(val)
 	case *float64:
+		val, err := strconv.ParseFloat(s, 64)
+		if err != nil {
+			return err
+		}
 		*ptr = val
 	}
 	return nil
